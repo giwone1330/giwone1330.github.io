@@ -1,6 +1,6 @@
 ---
 title: Hello World
-date: 2023-05-23 12:00:00 -500
+date: 2023-07-05 12:00:00 +0900
 category: [tutorial, programming]
 tags: [ai, deeplearing, python, resume] # TAG names shouldalways be lowercase
 ---
