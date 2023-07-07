@@ -1,6 +1,6 @@
 ---
 title: Hello and Welcome!
-date: 2023-07-05 12:00:00 +0900
+date: 2023-07-05 00:00:00 +0900
 category: [miscellaneous, introduction]
 tags: [] # TAG names shouldalways be lowercase
 ---
