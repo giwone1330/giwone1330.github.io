@@ -102,6 +102,8 @@ Also try to keep only one Obsidian at a time. The periodic sync make it kind of 
 
 # TODO
 
-- Add Windows and MacOS content
+- Add Windows content
+- Add MacOS content
+
 
 
