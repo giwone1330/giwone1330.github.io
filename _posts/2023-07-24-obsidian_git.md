@@ -97,4 +97,7 @@ Also try to keep only one Obsidian at a time. The periodic sync make it kind of 
 - TagFolder
 - Version History Diff
 
+# TODO
+- Add Windows and MacOS content
+
 
