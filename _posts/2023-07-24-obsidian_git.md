@@ -13,6 +13,7 @@ However, unlike Notion Obsidian doesn't provide cloud-sync from the go, unless y
 But by using the powerful plugins provieded by the community, I was able to make obsidian work across platforms.
 
 ## Ubuntu
+
 ### Installation
 
 Always check for the latest releases from homepage.
@@ -65,6 +66,7 @@ Here check the terminal if there's no response. It might ask you your github aut
 The ubuntu part is almost done! You can monitor the git manually by using the command `Obsidian Git: Open source control view` Check for the Obsidian Git pluging settings for any problems.
 
 ## Android
+
 ### Installation and Setup
 
 Install Obsidian from google play store or any app stores you use.
@@ -88,6 +90,7 @@ If there's any problem, check plugin settings and restart the app or the device 
 Also try to keep only one Obsidian at a time. The periodic sync make it kind of buggy.
 
 ## Other plugin suggestions
+
 - Advanced Slides
 - Day Planner
 - Dice Roller
@@ -98,6 +101,7 @@ Also try to keep only one Obsidian at a time. The periodic sync make it kind of 
 - Version History Diff
 
 # TODO
+
 - Add Windows and MacOS content
 
 
