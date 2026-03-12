@@ -1,0 +1,215 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TimeLineElement from "../components/cv/TimeLine.astro";
+
+const contactLinks = [
+  { label: "giwone1330@gmail.com", href: "mailto:giwone1330@gmail.com" },
+  { label: "608-960-5468", href: "tel:+16089605468" },
+  { label: "Madison, WI 53715" },
+  { label: "LinkedIn", href: "https://linkedin.com/in/giwone1330" },
+  { label: "GitHub", href: "https://github.com/giwone1330" },
+  {
+    label: "Google Scholar",
+    href: "https://scholar.google.com/citations?user=9dCy_PIAAAAJ&hl=en",
+  },
+];
+
+const education = [
+  {
+    title: "University of Wisconsin-Madison",
+    subtitle: "Expected May 2026 • Master of Science in Electrical & Computer Engineering - Research • Madison, WI",
+    details: [
+      "Thesis: Accelerating Homomorphic Encrypted Inference with Multilinear Networks",
+      "GPA: 3.86/4.0",
+    ],
+  },
+  {
+    title: "Yonsei University",
+    subtitle: "Aug 2023 • Bachelor of Science in Engineering • Seoul, South Korea",
+    details: [
+      "Major: Electrical & Electronics Engineering, Civil Engineering",
+      "GPA: 3.67/4.3",
+      "Honors Thesis: Human pose dataset enhancement and segmentation model improvement",
+      "Honors Thesis: Mobile robot based PPE compliance monitoring",
+    ],
+  },
+];
+
+const experience = [
+  {
+    title: "Graduate Researcher",
+    subtitle: "Dec 2024 to May 2026 • Grigorios Chrysos Research Group - UW-Madison • Madison, WI",
+    details: [
+      "Developed fully homomorphic encryption-compatible neural architectures, optimizing arithmetic circuit depth and CKKS noise growth for efficient encrypted transformer inference.",
+      "Designed polynomial attention and multilinear operator replacements for transformer blocks, reducing non-linear operations and improving the efficiency of privacy-preserving LLM inference.",
+    ],
+  },
+  {
+    title: "Machine Learning Engineer",
+    subtitle: "May 2024 to Aug 2024 • Hecto Co., Ltd • Seoul, South Korea",
+    details: [
+      "Implemented quantized fine-tuning pipelines for large language models with HuggingFace and PyTorch, reducing GPU memory usage by 50% and doubling inference throughput across production NLP workloads.",
+      "Designed and trained a custom object detection model with 95% F1, deployed scalable inference APIs with FastAPI, and integrated vector search with Milvus and Qdrant for the CycleAI production service.",
+      "Developed a multimodal LLM-based text-to-speech system for OneApp, enabling automated customer interaction workflows.",
+    ],
+  },
+  {
+    title: "Undergraduate Researcher",
+    subtitle: "Feb 2022 to Nov 2023 • Smart Infrastructure Lab - Yonsei University • Seoul, South Korea",
+    details: [
+      "Co-authored 5 conference papers and 1 journal publication on machine learning-driven infrastructure monitoring.",
+      "Developed crack segmentation algorithms and a semi-supervised domain adaptation framework using label propagation to address data scarcity in participatory sensing environments.",
+    ],
+  },
+];
+
+const projects = [
+  {
+    title: "Inducing and Analyzing Hallucination in Diffusion LLMs",
+    subtitle: "Sep 2025 to Dec 2025 • Hallucination & Diffusion Models",
+    // url: "/projects/inducing-and-analyzing-hallucination-in-diffusion-llms",
+    details: [
+      "Investigated hallucination behavior in the LLaDA-8B diffusion language model using anchor-token perturbations.",
+      "Built an automated evaluation pipeline across 5 datasets and 500 queries, and classified hallucination types.",
+      "Found hallucination rates above 80% independent of anchor position, revealing diffusion-specific error propagation.",
+    ],
+  },
+  {
+    title: "Hybrid Text-Vision Retrieval for Multimodal RAG",
+    subtitle: "Sep 2025 to Dec 2025 • Retrieval Systems & Multimodal ML",
+    details: [
+      "Evaluated visual retrieval with VisRAG against text retrieval with BGE and E5 on document-image datasets.",
+      "Demonstrated text retrieval outperforming visual retrieval by 4x MRR on text-dominant documents.",
+      "Proposed hybrid modality fusion that improved retrieval to MRR 0.8379 and Recall@10 0.928.",
+    ],
+  },
+];
+
+const certifications = [
+  {
+    label: "Machine Learning Specialization - Stanford University & DeepLearning.AI",
+    href: "https://www.coursera.org/specializations/machine-learning-introduction",
+    date: "Mar 2024",
+  },
+];
+
+const skillGroups = [
+  {
+    category: "Programming Languages",
+    items: ["Python", "MATLAB", "SQL", "Docker"],
+  },
+  {
+    category: "Machine Learning",
+    items: ["Pytorch", "Huggingface", "Tensorflow", "ONNX"],
+  },
+  {
+    category: "ML Domains",
+    items: ["Computer Vision", "Natural Language Processing", "Deep Learning", "Neural Networks"],
+  },
+  {
+    category: "Systems & Infrastructure",
+    items: ["Docker", "FastAPI", "Git", "llama.cpp"],
+  },
+  {
+    category: "Databases",
+    items: ["PostgreSQL", "Chroma", "Qdrant", "Milvus"],
+  },
+];
+---
+
+<BaseLayout title="Profile" sideBarActiveItemID="cv">
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Giwon Shin</div>
+    <div class="mt-2 text-base-content/70">Machine Learning Engineer and Electrical &amp; Computer Engineering Researcher</div>
+  </div>
+
+  <div class="mb-6 flex flex-wrap gap-x-4 gap-y-2 text-sm">
+    {contactLinks.map(({ label, href }) =>
+      href ? (
+        <a class="link link-hover" href={href} target="_blank" rel="noreferrer">{label}</a>
+      ) : (
+        <span>{label}</span>
+      ),
+    )}
+  </div>
+
+  <div class="mb-10 text-justify leading-7">
+    A motivated and innovative master's student with hands-on experience in fine-tuning large language models, developing AI-driven systems, and working with retrieval-augmented generation, vector databases, and audio processing. Passionate about applying AI to real-world problems, with a strong foundation in machine learning, natural language processing, and computer vision.
+  </div>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Education</div>
+  </div>
+
+  <div class="time-line-container grid gap-4 mb-10">
+    {education.map((item) => (
+      <TimeLineElement title={item.title} subtitle={item.subtitle}>
+        <ul class="list-disc pl-5 space-y-1">
+          {item.details.map((detail) => (
+            <li>{detail}</li>
+          ))}
+        </ul>
+      </TimeLineElement>
+    ))}
+  </div>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Experience</div>
+  </div>
+
+  <div class="time-line-container mb-10">
+    {experience.map((item) => (
+      <TimeLineElement title={item.title} subtitle={item.subtitle}>
+        <ul class="list-disc pl-5 space-y-2">
+          {item.details.map((detail) => (
+            <li>{detail}</li>
+          ))}
+        </ul>
+      </TimeLineElement>
+    ))}
+  </div>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Projects</div>
+  </div>
+
+  <div class="time-line-container mb-10">
+    {projects.map((item) => (
+      <TimeLineElement title={item.title} subtitle={item.subtitle}>
+        <ul class="list-disc pl-5 space-y-2">
+          {item.details.map((detail) => (
+            <li>{detail}</li>
+          ))}
+        </ul>
+      </TimeLineElement>
+    ))}
+  </div>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Certifications</div>
+  </div>
+
+  <ul class="list-disc mx-6 mb-10 grid gap-2">
+    {certifications.map((item) => (
+      <li>
+        <a class="link link-hover" href={item.href} target="_blank" rel="noreferrer">
+          {item.label}
+        </a>
+        <span class="ml-2 text-sm text-base-content/70">{item.date}</span>
+      </li>
+    ))}
+  </ul>
+
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold">Skills</div>
+  </div>
+
+  <div class="grid gap-4 md:grid-cols-2">
+    {skillGroups.map((group) => (
+      <div class="rounded-lg border border-base-300 p-4">
+        <div class="font-semibold">{group.category}</div>
+        <div class="mt-2 text-sm leading-7">{group.items.join(", ")}</div>
+      </div>
+    ))}
+  </div>
+</BaseLayout>

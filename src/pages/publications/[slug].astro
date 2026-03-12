@@ -1,0 +1,39 @@
+---
+import { type CollectionEntry, getCollection } from "astro:content";
+import { type PublicationSchema } from "../../content/config";
+import PostLayout from "../../layouts/PostLayout.astro";
+import createSlug from "../../lib/createSlug";
+
+export async function getStaticPaths() {
+  const pubEntries = await getCollection("publications");
+  return pubEntries.map((entry) => ({
+    params: { slug: createSlug(entry.data.title, entry.slug) },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<"publications">;
+}
+
+const { entry } = Astro.props;
+const pub: PublicationSchema = entry.data;
+const { Content } = await entry.render();
+---
+
+<PostLayout
+  title={pub.title}
+  description={pub.description}
+  pubDate={pub.pubDate}
+  heroImage={pub.heroImage}
+  updatedDate={pub.updatedDate}
+  badge={pub.badge}
+  tags={pub.tags}
+  tagBase="publications"
+  projectUrl={pub.doi}
+>
+  {pub.venue && (
+    <p class="not-prose text-sm opacity-60 -mt-4 mb-4 italic">{pub.venue}</p>
+  )}
+  <Content />
+</PostLayout>

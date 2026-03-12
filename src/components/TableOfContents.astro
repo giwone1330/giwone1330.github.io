@@ -1,0 +1,208 @@
+---
+// Table of Contents — built entirely client-side from the article's headings.
+// Shows on xl+ screens as a sticky panel to the right of the article.
+// top-[188px] aligns with the "Home" menu tab in the left sidebar:
+//   aside pt-2 (8) + avatar mt-5 (20) + w-[8.5rem] height (136) + mb-6 (24) = 188px
+---
+
+<aside id="toc-sidebar" class="hidden xl:flex flex-col sticky top-[188px] self-start w-52 shrink-0">
+  <p class="text-xs font-semibold uppercase tracking-widest opacity-50 mb-3 pl-3">On this page</p>
+  <nav id="toc-nav" aria-label="Table of contents"></nav>
+</aside>
+
+<style is:global>
+  /* Heading links */
+  .toc-item {
+    display: block;
+    padding: 3px 8px 3px 12px;
+    margin: 1px 0;
+    border-left: 2px solid transparent;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    text-decoration: none;
+    color: oklch(var(--bc) / 0.55);
+    transition: color 0.15s ease, border-color 0.15s ease;
+    word-break: break-word;
+  }
+  .toc-item:hover {
+    color: oklch(var(--bc));
+    border-left-color: oklch(var(--bc) / 0.3);
+  }
+  .toc-item.toc-active {
+    color: oklch(var(--p));
+    border-left-color: oklch(var(--p));
+    font-weight: 600;
+  }
+
+  /* Indentation per level */
+  .toc-h3 { padding-left: 1.25rem; }
+  .toc-h4 { padding-left: 2rem; }
+
+  /* Collapsible sub-sections */
+  .toc-sub {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.25s ease;
+  }
+  .toc-sub.toc-open {
+    max-height: 600px;
+  }
+</style>
+
+<script>
+  let tocObserver: IntersectionObserver | null = null;
+  let tocScrollCleanup: (() => void) | null = null;
+
+  function buildToc() {
+    const sidebar = document.getElementById('toc-sidebar');
+    const nav = document.getElementById('toc-nav');
+    if (!sidebar || !nav) return;
+
+    // Reset previous state
+    nav.innerHTML = '';
+    tocObserver?.disconnect();
+    tocObserver = null;
+    tocScrollCleanup?.();
+    tocScrollCleanup = null;
+
+    const article = document.querySelector<HTMLElement>('article.prose');
+    if (!article) {
+      sidebar.style.display = 'none';
+      return;
+    }
+
+    const headings = Array.from(
+      article.querySelectorAll<HTMLElement>('h2, h3, h4')
+    );
+
+    if (headings.length < 2) {
+      sidebar.style.display = 'none';
+      return;
+    }
+
+    sidebar.style.display = '';
+
+    // ── Build the TOC tree ───────────────────────────────────────────────────
+    const links: HTMLAnchorElement[] = [];
+    let h2Sub: HTMLElement | null = null;
+    let h3Sub: HTMLElement | null = null;
+
+    for (const heading of headings) {
+      const level = Number(heading.tagName[1]);
+      const link = document.createElement('a');
+      link.href = '#' + heading.id;
+      link.textContent = heading.textContent;
+      link.dataset.headingId = heading.id;
+      link.className = `toc-item toc-h${level}`;
+      links.push(link);
+
+      if (level === 2) {
+        const group = document.createElement('div');
+        const sub = document.createElement('div');
+        sub.className = 'toc-sub';
+        group.appendChild(link);
+        group.appendChild(sub);
+        nav.appendChild(group);
+        h2Sub = sub;
+        h3Sub = null;
+      } else if (level === 3) {
+        const group = document.createElement('div');
+        const sub = document.createElement('div');
+        sub.className = 'toc-sub';
+        group.appendChild(link);
+        group.appendChild(sub);
+        (h2Sub ?? nav).appendChild(group);
+        h3Sub = sub;
+      } else {
+        (h3Sub ?? h2Sub ?? nav).appendChild(link);
+      }
+    }
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
+    const idToLink = new Map(links.map((l) => [l.dataset.headingId!, l]));
+    let activeId = '';
+
+    function allSubs(): HTMLElement[] {
+      return Array.from(nav!.querySelectorAll<HTMLElement>('.toc-sub'));
+    }
+
+    function expandAll() {
+      allSubs().forEach((s) => s.classList.add('toc-open'));
+    }
+
+    function activate(id: string) {
+      if (id === activeId) return;
+      activeId = id;
+
+      links.forEach((l) => l.classList.remove('toc-active'));
+      const active = idToLink.get(id);
+      if (!active) return;
+
+      active.classList.add('toc-active');
+
+      // Expand every ancestor .toc-sub of the active link
+      let el: HTMLElement | null = active.parentElement;
+      while (el && el !== nav!) {
+        if (el.classList.contains('toc-sub')) el.classList.add('toc-open');
+        el = el.parentElement;
+      }
+
+      // Collapse sibling h2 sub-sections that don't contain the active link
+      nav!.querySelectorAll<HTMLElement>('.toc-h2').forEach((h2Link) => {
+        const wrapper = h2Link.parentElement;
+        const sub = wrapper?.querySelector<HTMLElement>('.toc-sub');
+        if (sub && !wrapper?.contains(active)) {
+          sub.classList.remove('toc-open');
+        }
+      });
+    }
+
+    // ── Scroll-aware expand / collapse ───────────────────────────────────────
+    const AT_TOP_THRESHOLD = 10; // px — treat page as "at top" below this
+    let wasAtTop = window.scrollY < AT_TOP_THRESHOLD;
+
+    function applyScrollState(atTop: boolean) {
+      if (atTop) {
+        // Show everything expanded
+        expandAll();
+        links.forEach((l) => l.classList.remove('toc-active'));
+        activeId = '';
+      } else {
+        // Collapse all; let activate() re-open only the relevant section
+        allSubs().forEach((s) => s.classList.remove('toc-open'));
+        const saved = activeId;
+        activeId = '';
+        if (saved) activate(saved);
+      }
+    }
+
+    const onScroll = () => {
+      const atTop = window.scrollY < AT_TOP_THRESHOLD;
+      if (atTop === wasAtTop) return;
+      wasAtTop = atTop;
+      applyScrollState(atTop);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    tocScrollCleanup = () => window.removeEventListener('scroll', onScroll);
+
+    // ── IntersectionObserver ─────────────────────────────────────────────────
+    tocObserver = new IntersectionObserver(
+      (entries) => {
+        if (window.scrollY < AT_TOP_THRESHOLD) return; // ignore while fully at top
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) activate(visible[0].target.id);
+      },
+      { rootMargin: '-5% 0px -65% 0px', threshold: 0 }
+    );
+
+    headings.forEach((h) => tocObserver!.observe(h));
+
+    // Initial render
+    applyScrollState(wasAtTop);
+  }
+
+  // Fires on first load and after every View Transition navigation
+  document.addEventListener('astro:page-load', buildToc);
+</script>
