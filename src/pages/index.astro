@@ -4,6 +4,23 @@ import HorizontalCard from "../components/HorizontalCard.astro";
 import { getCollection } from "astro:content";
 import createSlug from "../lib/createSlug"
 
+// display only n latest projects, but show pinned projects first regardless of date
+const PROJECT_LIMIT = 3; // set n here
+
+const projects = (await getCollection("projects")).sort((a, b) => {
+  const aPinned = (a.data.badge ?? "").trim().toLowerCase() === "pinned";
+  const bPinned = (b.data.badge ?? "").trim().toLowerCase() === "pinned";
+
+  if (aPinned !== bPinned) {
+    return aPinned ? -1 : 1; // pinned first
+  }
+
+  return b.data.pubDate.valueOf() - a.data.pubDate.valueOf(); // newest first
+});
+
+const latestProjects = projects.slice(0, PROJECT_LIMIT);
+
+
 const posts = (await getCollection("blog")).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
 const last_posts = posts.slice(0, 3);
@@ -31,30 +48,33 @@ const last_posts = posts.slice(0, 3);
     <div class="text-3xl w-full font-bold mb-2">My last projects {"</>"}</div>
   </div>
 
-  <HorizontalCard
-    title="Demo Project 1"
-    img="/post_img.webp"
-    desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    url="#"
-    badge="NEW"
-  />
-  <div class="divider my-0"></div>
-  <HorizontalCard
-    title="Demo Project 2"
-    img="/post_img.webp"
-    desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    url="#"
-  />
-  <div class="divider my-0"></div>
-  <HorizontalCard
-    title="Demo Project 3"
-    img="/post_img.webp"
-    desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    url="#"
-    badge="FOSS"
-  />
+{
+  latestProjects.length === 0 ? (
+    <div class="bg-base-200 border-l-4 border-secondary w-full p-4 min-w-full">
+      <p class="font-bold">No projects yet</p>
+      <p>Project posts will appear here once published.</p>
+    </div>
+  ) : (
+    latestProjects.map((project) => (
+      <>
+        <HorizontalCard
+          title={project.data.title}
+          img={project.data.heroImage}
+          desc={project.data.description}
+          url={"/projects/" + createSlug(project.data.title, project.slug)}
+          target="_self"
+          badge={project.data.badge}
+          tags={project.data.tags}
+        />
+        <div class="divider my-0"></div>
+      </>
+    ))
+  )
+}
 
-  <div>
+
+
+  <!-- <div>
     <div class="text-3xl w-full font-bold mb-5 mt-10">Latest from blog</div>
   </div>
 
@@ -72,5 +92,5 @@ const last_posts = posts.slice(0, 3);
         <div class="divider my-0" />
       </>
     ))
-  }
+  } -->
 </BaseLayout>

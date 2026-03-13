@@ -2,17 +2,8 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import TimeLineElement from "../components/cv/TimeLine.astro";
 
-const contactLinks = [
-  { label: "giwone1330@gmail.com", href: "mailto:giwone1330@gmail.com" },
-  { label: "608-960-5468", href: "tel:+16089605468" },
-  { label: "Madison, WI 53715" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/giwone1330" },
-  { label: "GitHub", href: "https://github.com/giwone1330" },
-  {
-    label: "Google Scholar",
-    href: "https://scholar.google.com/citations?user=9dCy_PIAAAAJ&hl=en",
-  },
-];
+const professionalCvUrl = "https://drive.google.com/file/d/1QStv3nUg-kyrXnMUrTVKV4RIGXsH6ZBu/view?usp=drive_link"; // TODO: replace with Google Drive link
+const academicCvUrl = "https://drive.google.com/file/d/13-yJ-jVGH9JZ5tHgne_Y_TuV3URvSVk0/view?usp=drive_link"; // TODO: replace with Google Drive link
 
 const education = [
   {
@@ -123,14 +114,13 @@ const skillGroups = [
     <div class="mt-2 text-base-content/70">Machine Learning Engineer and Electrical &amp; Computer Engineering Researcher</div>
   </div>
 
-  <div class="mb-6 flex flex-wrap gap-x-4 gap-y-2 text-sm">
-    {contactLinks.map(({ label, href }) =>
-      href ? (
-        <a class="link link-hover" href={href} target="_blank" rel="noreferrer">{label}</a>
-      ) : (
-        <span>{label}</span>
-      ),
-    )}
+  <div class="mb-6 flex flex-wrap gap-3">
+    <a href={professionalCvUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+      Professional CV ↗
+    </a>
+    <a href={academicCvUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+      Academic CV ↗
+    </a>
   </div>
 
   <div class="mb-10 text-justify leading-7">
