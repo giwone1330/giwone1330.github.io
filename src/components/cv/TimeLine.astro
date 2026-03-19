@@ -1,6 +1,6 @@
 ---
 const hasContent = Astro.slots.has("default");
-const { title, subtitle } = Astro.props;
+const { title, subtitle, url } = Astro.props;
 ---
 
 <div class="flex">
@@ -9,7 +9,13 @@ const { title, subtitle } = Astro.props;
     <span class="education__line bg-primary block h-full w-[2px] translate-x-[7px]"></span>
   </div>
   <div class="experience__data bd-grid px-5">
-    <h3 class="font-semibold mb-1">{title}</h3>
+    <h3 class="font-semibold mb-1">
+      {url ? (
+        <a class="link link-hover" href={url}>{title}</a>
+      ) : (
+        title
+      )}
+    </h3>
     <span class="font-light text-sm">{subtitle}</span>
     {hasContent && (
       <div class="my-2 text-justify">

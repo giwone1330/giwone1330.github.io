@@ -58,7 +58,7 @@ const projects = [
   {
     title: "Inducing and Analyzing Hallucination in Diffusion LLMs",
     subtitle: "Sep 2025 to Dec 2025 • Hallucination & Diffusion Models",
-    // url: "/projects/inducing-and-analyzing-hallucination-in-diffusion-llms",
+    url: "/projects/inducing-and-analyzing-hallucination-in-diffusion-llms",
     details: [
       "Investigated hallucination behavior in the LLaDA-8B diffusion language model using anchor-token perturbations.",
       "Built an automated evaluation pipeline across 5 datasets and 500 queries, and classified hallucination types.",
@@ -68,6 +68,7 @@ const projects = [
   {
     title: "Hybrid Text-Vision Retrieval for Multimodal RAG",
     subtitle: "Sep 2025 to Dec 2025 • Retrieval Systems & Multimodal ML",
+    url: "/projects/exploring-beyond-visrag",
     details: [
       "Evaluated visual retrieval with VisRAG against text retrieval with BGE and E5 on document-image datasets.",
       "Demonstrated text retrieval outperforming visual retrieval by 4x MRR on text-dominant documents.",
@@ -111,7 +112,7 @@ const skillGroups = [
 <BaseLayout title="Profile" sideBarActiveItemID="cv">
   <div class="mb-5">
     <div class="text-3xl w-full font-bold">Giwon Shin</div>
-    <div class="mt-2 text-base-content/70">Machine Learning Engineer and Electrical &amp; Computer Engineering Researcher</div>
+    <div class="mt-2 text-base-content/70">Machine Learning Engineer and Researcher</div>
   </div>
 
   <div class="mb-6 flex flex-wrap gap-3">
@@ -123,9 +124,9 @@ const skillGroups = [
     </a>
   </div>
 
-  <div class="mb-10 text-justify leading-7">
+  <!-- <div class="mb-10 text-justify leading-7">
     A motivated and innovative master's student with hands-on experience in fine-tuning large language models, developing AI-driven systems, and working with retrieval-augmented generation, vector databases, and audio processing. Passionate about applying AI to real-world problems, with a strong foundation in machine learning, natural language processing, and computer vision.
-  </div>
+  </div> -->
 
   <div class="mb-5">
     <div class="text-3xl w-full font-bold">Education</div>
@@ -165,7 +166,7 @@ const skillGroups = [
 
   <div class="time-line-container mb-10">
     {projects.map((item) => (
-      <TimeLineElement title={item.title} subtitle={item.subtitle}>
+      <TimeLineElement title={item.title} subtitle={item.subtitle} url={item.url}>
         <ul class="list-disc pl-5 space-y-2">
           {item.details.map((detail) => (
             <li>{detail}</li>
