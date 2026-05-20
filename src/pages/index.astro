@@ -4,8 +4,9 @@ import HorizontalCard from "../components/HorizontalCard.astro";
 import { getCollection } from "astro:content";
 import createSlug from "../lib/createSlug"
 
-// display only n latest projects, but show pinned projects first regardless of date
-const PROJECT_LIMIT = 3; // set n here
+// display only n latest projects/publications, but show pinned first regardless of date
+const PROJECT_LIMIT     = 3; // set n here
+const PUBLICATION_LIMIT = 3; // set n here
 
 const projects = (await getCollection("projects")).sort((a, b) => {
   const aPinned = (a.data.badge ?? "").trim().toLowerCase() === "pinned";
@@ -20,6 +21,15 @@ const projects = (await getCollection("projects")).sort((a, b) => {
 
 const latestProjects = projects.slice(0, PROJECT_LIMIT);
 
+const publications = (await getCollection("publications")).sort((a, b) => {
+  const aPinned = (a.data.badge ?? "").trim().toLowerCase() === "pinned";
+  const bPinned = (b.data.badge ?? "").trim().toLowerCase() === "pinned";
+  if (aPinned !== bPinned) return aPinned ? -1 : 1;
+  return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+});
+
+const latestPublications = publications.slice(0, PUBLICATION_LIMIT);
+
 
 const posts = (await getCollection("blog")).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
@@ -30,10 +40,10 @@ const last_posts = posts.slice(0, 3);
   <div class="pb-12 mt-5">
     <div class="text-xl py-1">Hey there 👋</div>
     <div class="text-5xl font-bold">I'm Giwon Shin</div>
-    <div class="text-3xl py-3 font-bold">Machine Learning Engineer</div>
+    <div class="text-3xl py-3 font-bold">Machine Learning Engineer & Researcher</div>
     <div class="py-2">
       <text class="text-lg">
-        This is my homepage where I share my projects and thoughts on machine learning, software engineering, and more. I'm passionate about building things that make a difference and love to learn new technologies. Feel free to explore and connect with me!
+        This is my homepage where I share my projects and works on machine learning, research, and more. I'm passionate about building things that make a difference and love to learn new technologies. Feel free to explore and connect with me!
       </text>
     </div>
     <!-- <div class="mt-8">
@@ -45,7 +55,37 @@ const last_posts = posts.slice(0, 3);
   </div>
 
   <div>
-    <div class="text-3xl w-full font-bold mb-2">My last projects {"</>"}</div>
+    <div class="text-3xl w-full font-bold mb-2">Publication highlights</div>
+  </div>
+
+{
+  latestPublications.length === 0 ? (
+    <div class="bg-base-200 border-l-4 border-secondary w-full p-4 min-w-full">
+      <p class="font-bold">No publications yet</p>
+      <p>Publication posts will appear here once published.</p>
+    </div>
+  ) : (
+    latestPublications.map((pub) => (
+      <>
+        <HorizontalCard
+          title={pub.data.title}
+          img={pub.data.heroImage}
+          desc={pub.data.description}
+          url={"/publications/" + createSlug(pub.data.title, pub.slug)}
+          target="_self"
+          badge={pub.data.badge}
+          tags={pub.data.tags}
+        />
+        <div class="divider my-0"></div>
+      </>
+    ))
+  )
+}
+
+
+
+  <div>
+    <div class="text-3xl w-full font-bold mb-2">Project highlights</div>
   </div>
 
 {

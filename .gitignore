@@ -23,3 +23,6 @@ pnpm-debug.log*
 
 # resources
 resources/
+instructions.md
+win10_save.json
+mac_save.json

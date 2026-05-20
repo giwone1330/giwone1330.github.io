@@ -8,9 +8,10 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 export interface Props extends BlogSchema {
   tagBase?: string;
   projectUrl?: string;
+  publicationUrl?: string;
 }
 
-const { title, description, pubDate, updatedDate, heroImage, badge, tags = [], tagBase = 'blog', projectUrl } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, badge, tags = [], tagBase = 'blog', projectUrl, publicationUrl} = Astro.props;
 dayjs.extend(localizedFormat);
 const displayDate = dayjs(pubDate).format("ll")
 import { Image } from "astro:assets";
@@ -32,11 +33,29 @@ import { Image } from "astro:assets";
             </a>
           ))
       }
-      {projectUrl && (
-        <div class="my-2">
-          <a href={projectUrl} target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
-            View Project ↗
-          </a>
+      {(projectUrl || publicationUrl) && (
+        <div class="my-2 flex flex-row gap-2">
+          {publicationUrl && (
+            <a
+              href={publicationUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-outline btn-sm"
+            >
+              View Publication ↗
+            </a>
+          )}
+
+          {projectUrl && (
+            <a
+              href={projectUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-outline btn-sm"
+            >
+              View Project ↗
+            </a>
+          )}
         </div>
       )}
       {

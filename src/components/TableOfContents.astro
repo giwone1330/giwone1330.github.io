@@ -158,8 +158,10 @@
     }
 
     // ── Scroll-aware expand / collapse ───────────────────────────────────────
-    const AT_TOP_THRESHOLD = 10; // px — treat page as "at top" below this
-    let wasAtTop = window.scrollY < AT_TOP_THRESHOLD;
+    const AT_TOP_THRESHOLD    = 10; // px — treat page as "at top" below this
+    const AT_BOTTOM_THRESHOLD = 10; // px — treat page as "at bottom" above this
+    let wasAtTop    = window.scrollY < AT_TOP_THRESHOLD;
+    let wasAtBottom = false;
 
     function applyScrollState(atTop: boolean) {
       if (atTop) {
@@ -178,17 +180,58 @@
 
     const onScroll = () => {
       const atTop = window.scrollY < AT_TOP_THRESHOLD;
-      if (atTop === wasAtTop) return;
-      wasAtTop = atTop;
-      applyScrollState(atTop);
+
+      if (atTop !== wasAtTop) {
+        wasAtTop = atTop;
+        wasAtBottom = false;
+        applyScrollState(atTop);
+        return;
+      }
+
+      if (!atTop && headings.length > 0) {
+        const atBottom =
+          window.scrollY + window.innerHeight >=
+          document.documentElement.scrollHeight - AT_BOTTOM_THRESHOLD;
+
+        if (atBottom) {
+          // At bottom: pin the last heading
+          wasAtBottom = true;
+          activate(headings[headings.length - 1].id);
+        } else if (wasAtBottom) {
+          // Just left the bottom — re-derive active heading from current position
+          wasAtBottom = false;
+          const mid = window.innerHeight * 0.35;
+          let current = headings[0];
+          for (const h of headings) {
+            if (h.getBoundingClientRect().top < mid) current = h;
+            else break;
+          }
+          activeId = ''; // force re-activation
+          activate(current.id);
+        }
+      }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     tocScrollCleanup = () => window.removeEventListener('scroll', onScroll);
+
+    // ── Click-to-navigate: activate immediately, suppress observer briefly ───
+    let clickCooldown = false;
+    let clickCooldownTimer: ReturnType<typeof setTimeout> | null = null;
+
+    links.forEach((link) => {
+      link.addEventListener('click', () => {
+        activate(link.dataset.headingId!);
+        clickCooldown = true;
+        if (clickCooldownTimer) clearTimeout(clickCooldownTimer);
+        clickCooldownTimer = setTimeout(() => { clickCooldown = false; }, 600);
+      });
+    });
 
     // ── IntersectionObserver ─────────────────────────────────────────────────
     tocObserver = new IntersectionObserver(
       (entries) => {
         if (window.scrollY < AT_TOP_THRESHOLD) return; // ignore while fully at top
+        if (clickCooldown) return;                     // ignore during click navigation
         const visible = entries
           .filter((e) => e.isIntersecting)
           .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);

@@ -36,6 +36,7 @@ const publicationSchema = z.object({
     }).optional(),
     venue: z.string().optional(),
     doi: z.string().optional(),
+    url: z.string().optional(),
 });
 
 const storeSchema = z.object({

@@ -30,7 +30,8 @@ const { Content } = await entry.render();
   badge={pub.badge}
   tags={pub.tags}
   tagBase="publications"
-  projectUrl={pub.doi}
+  publicationUrl={pub.doi}
+  projectUrl={pub.url}
 >
   {pub.venue && (
     <p class="not-prose text-sm opacity-60 -mt-4 mb-4 italic">{pub.venue}</p>

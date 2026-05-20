@@ -31,8 +31,8 @@ const experience = [
     title: "Graduate Researcher",
     subtitle: "Dec 2024 to May 2026 • Grigorios Chrysos Research Group - UW-Madison • Madison, WI",
     details: [
-      "Developed fully homomorphic encryption-compatible neural architectures, optimizing arithmetic circuit depth and CKKS noise growth for efficient encrypted transformer inference.",
-      "Designed polynomial attention and multilinear operator replacements for transformer blocks, reducing non-linear operations and improving the efficiency of privacy-preserving LLM inference.",
+      "Proposed MuSe, a packing-aware causal sequence architecture for privacy-preserving LLM inference under bootstrapped CKKS Homomorphic Encryption, replacing self-attention with Polynomial Toeplitz Mixer and feed-forward layers with a Mu-layer to reduce CKKS-unfriendly nonlinearities.",
+      "Built and evaluated end-to-end pure-FHE causal inference in the DESILO CKKS stack under outer- and inner-based ciphertext packing; achieved 12.05x faster cache-enabled generation from 5,639s to 468s/token while maintaining low hidden-state deviation.",
     ],
   },
   {
@@ -56,6 +56,15 @@ const experience = [
 
 const projects = [
   {
+    title: "MuSe: Packing-Aware Causal Sequence Modeling under Fully Homomorphic Encryption",
+    subtitle: "Jan 2026 to May 2026 • Homomorphic Encryption & Efficient Sequence Models",
+    url: "/publications/muse-packing-aware-causal-sequence-modeling-under-fully-homomorphic-encryption",
+    details: [
+      "Designed a packing-aware causal decoder for pure-FHE inference, replacing softmax attention with Polynomial Toeplitz Mixer and feed-forward layers with Mu-layers.",
+      "Evaluated encrypted causal generation under outer- and inner-based CKKS packing in the DESILO stack, with inner cached decoding achieving a 12.05x speedup from 5,639s to 468s/token.",
+    ],
+  },
+  {
     title: "Inducing and Analyzing Hallucination in Diffusion LLMs",
     subtitle: "Sep 2025 to Dec 2025 • Hallucination & Diffusion Models",
     url: "/projects/inducing-and-analyzing-hallucination-in-diffusion-llms",
@@ -73,6 +82,51 @@ const projects = [
       "Evaluated visual retrieval with VisRAG against text retrieval with BGE and E5 on document-image datasets.",
       "Demonstrated text retrieval outperforming visual retrieval by 4x MRR on text-dominant documents.",
       "Proposed hybrid modality fusion that improved retrieval to MRR 0.8379 and Recall@10 0.928.",
+    ],
+  },
+  {
+    title: "Gaze-aware Proactive AI Assistance for Digital Article Readers",
+    subtitle: "Jan 2025 to May 2025 • HCI, Eye Tracking & LLM Systems",
+    url: "/projects/gaze-aware-proactive-ai-assistance-for-digital-article-readers",
+    details: [
+      "Built a browser-based reading assistant combining webcam gaze tracking, PDF.js document localization, and LLM-generated paragraph explanations for ESL readers.",
+      "Implemented gaze-to-document coordinate alignment, heatmap overlays, and paragraph-level assistance workflows to ground AI help in the user's reading context.",
+    ],
+  },
+  {
+    title: "Extending Tensor Depth Efficiency to Tensor-Train and RNN-like Models",
+    subtitle: "Jan 2025 to May 2025 • Theory, Tensor Decomposition & Sequence Models",
+    url: "/projects/extending-tensor-depth-efficiency-to-tensor-train-and-rnn-like-models",
+    details: [
+      "Extended a tensor-analysis depth-efficiency result from CP/HT decompositions to tensor-train factorization and a sequential RNN-like architecture.",
+      "Derived an exponential CP-rank lower bound almost everywhere and validated the trend empirically through experiments on randomly generated TT tensors.",
+    ],
+  },
+  {
+    title: "PseudoPremium: Optimizing Visitor Experience at Universal's Islands of Adventure",
+    subtitle: "Sep 2024 to Dec 2024 • Optimization & Operations Research",
+    url: "/projects/pseudopremium-optimizing-visitor-experience-at-universals-islands-of-adventure",
+    details: [
+      "Formulated a mixed-integer linear program in Julia/JuMP to optimize theme-park itineraries under ride preferences, wait times, ride durations, and must-ride constraints.",
+      "Analyzed tradeoffs among satisfaction, queue time, express-pass decisions, and seasonal crowding to generate personalized park-planning recommendations.",
+    ],
+  },
+  {
+    title: "Juno Meets Jupiter: Recreating and Reimagining JunoCam Imagery",
+    subtitle: "Nov 2024 to Dec 2024 • Scientific Visualization & Image Processing",
+    url: "/projects/juno-meets-jupiter-recreating-and-reimagining-junocam-imagery",
+    details: [
+      "Reconstructed raw JunoCam imagery in Mathematica through channel-wise parameter search and color remapping to match enhanced Jupiter renderings.",
+      "Created stylized but structurally informative visualizations of Jupiter that combined scientific reconstruction with expressive atmospheric rendering.",
+    ],
+  },
+  {
+    title: "Something Fishy This Way Comes: Fish Segmentation in Mathematica",
+    subtitle: "Sep 2024 to Oct 2024 • Image Segmentation & Classical Vision",
+    url: "/projects/something-fishy-this-way-comes-fish-segmentation-in-mathematica",
+    details: [
+      "Built an interpretable Mathematica segmentation pipeline using HSB decomposition, threshold fusion, morphology, and connected-component filtering.",
+      "Recovered stable fish area, centroid, and horizontal-length measurements despite glare, shadows, and background-connected artifacts.",
     ],
   },
 ];
@@ -148,7 +202,7 @@ const skillGroups = [
     <div class="text-3xl w-full font-bold">Experience</div>
   </div>
 
-  <div class="time-line-container mb-10">
+  <div class="time-line-container grid gap-4 mb-10">
     {experience.map((item) => (
       <TimeLineElement title={item.title} subtitle={item.subtitle}>
         <ul class="list-disc pl-5 space-y-2">
@@ -164,7 +218,7 @@ const skillGroups = [
     <div class="text-3xl w-full font-bold">Projects</div>
   </div>
 
-  <div class="time-line-container mb-10">
+  <div class="time-line-container grid gap-4 mb-10">
     {projects.map((item) => (
       <TimeLineElement title={item.title} subtitle={item.subtitle} url={item.url}>
         <ul class="list-disc pl-5 space-y-2">
